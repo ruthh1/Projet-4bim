@@ -64,11 +64,12 @@ def get_prior(num_modes, latent_dim):
 
 
     Args:
-        num_modes (_type_): _description_
-        latent_dim (_type_): _description_
+        num_modes (int): 
+        latent_dim (int): latent dimension we want to encode the image in
 
     Returns:
-        _type_: _description_
+        tfp.distributions.MixtureSameFamily : Mixture of gaussian distribution, with variable means and 
+        standart deviations
     """
     prior = tfd.MixtureSameFamily(
         # The mixture distribution is a list of probability for the distributions. Here it is set to be
@@ -93,6 +94,15 @@ def get_prior(num_modes, latent_dim):
 
 
 def get_kl_regularizer(prior_distribution):
+    """The kl regularizer is a part of the loss function. It takes the prior distribution as an
+    input will be used as the activity_regularizer of the tfpl.MultivariateNormalTriL layer of the encoder.
+
+    Args:
+        prior_distribution (tfp.distributions.MixtureSameFamily): 
+
+    Returns:
+        tensorflow_probability.python.layers.distribution_layer.KLDivergenceRegularizer :
+    """
     divergence_regularizer = tfpl.KLDivergenceRegularizer(
         prior_distribution,
         use_exact_kl=False,
@@ -104,6 +114,15 @@ def get_kl_regularizer(prior_distribution):
 
 
 def get_encoder(latent_dim, kl_regularizer):
+    """generates an encoder with a given latent dimension and a kl regularizer
+
+    Args:
+        latent_dim (int): dimension of the latent space we want to encode the image to
+        kl_regularizer (tensorflow_probability.python.layers.distribution_layer.KLDivergenceRegularizer): kl regularizer
+
+    Returns:
+        keras.engine.sequential.Sequential : encoder with all the layers we want
+    """
     encoder = Sequential([
         Conv2D(32, (4, 4), activation='relu', strides=2,
                padding='SAME', input_shape=(64, 64, 3)),
@@ -128,6 +147,14 @@ def get_encoder(latent_dim, kl_regularizer):
 # distribution of `event_shape=(64, 64, 3)`
 
 def get_decoder(latent_dim):
+    """generates the decoder of the vae, with a given latent dimension
+
+    Args:
+        latent_dim (int): latent dimension the image is encoded into
+
+    Returns:
+        keras.engine.sequential.Sequential: decoder of the vae model
+    """
     decoder = Sequential([
         Dense(4096, activation='relu', input_shape=(latent_dim, )),
         Reshape((4, 4, 256)),
@@ -169,6 +196,9 @@ def reconstruction_loss(batch_of_images, decoding_dist):
     the encoder) and decoding_dist (output distribution of decoder after passing the 
     image batch through the encoder and decoder) as arguments.
     The function should return the scalar average expected reconstruction loss.
+
+    Returns:
+        tf.Tensor : scalar average expected reconstruction loss
     """
     return -tf.reduce_mean(decoding_dist.log_prob(batch_of_images), axis=0)
 
@@ -190,6 +220,14 @@ def reconstruct(encoder, decoder, batch_of_images):
     The function takes the encoder, decoder and batch_of_images as inputs, which
     should be used to compute the reconstructions.
     The function should then return the reconstructions Tensor.
+
+    Args:
+        encoder (Sequential): encoder of the model
+        decoder (Sequential): decoder of the model
+        batch_of_images (ndarray): list of images we want to reconstruct
+
+    Returns:
+        tf.Tensor : reconstruction tensor
     """
     approx_posterior = encoder(batch_of_images)
     decoding_dist = decoder(approx_posterior.mean())
@@ -197,7 +235,13 @@ def reconstruct(encoder, decoder, batch_of_images):
 
 
 def plot_reconstructions_test_ds(encoder, decoder):
+    """
+    plots the reconstruction of the images versus the initial images
 
+    Args:
+        encoder (Sequential): encoder of the vae
+        decoder (Sequential): decoder of the vae
+    """
     n_reconstructions = 7
     num_test_files = np.load('./img_align_celeba/dataset_test.npy').shape[0]
     test_ds_for_reconstructions = load_dataset('dataset_test')
@@ -221,6 +265,7 @@ def plot_reconstructions_test_ds(encoder, decoder):
         axs[1, j].axis('off')
 
     plt.tight_layout()
+    plt.show()
 
     return None
 
@@ -242,6 +287,14 @@ def generate_images(prior, decoder, n_samples):
     The function takes the prior distribution, decoder and number of samples as inputs, which
     should be used to generate the images.
     The function should then return the batch of generated images.
+
+    Args:
+        prior (MixtureSameFamily): prior distribution
+        decoder (Sequential): trained decoder of the vae
+        n_samples (int): targeted number of samples
+
+    Returns:
+        tf.Tensor : images generated
     """
     z = prior.sample(n_samples)
     return decoder(z).mean()

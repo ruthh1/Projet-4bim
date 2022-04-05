@@ -304,7 +304,39 @@ def generate_images(prior, decoder, n_samples):
         image.save('gen'+str(count)+'.png')
     return sampled_images
 
+def generate_latent_vectors(prior, n_samples):
+    ''''''
+    Z = prior.sample(n_samples)
+    Z2 = Z.numpy()
+    '''if n_samples == 1:
+        Z3 = []
+        for element in Z2[0]:
+            Z3.append(element)
+        Z2 = np.array(Z3)'''
+    return Z2
 
+
+
+def reconstruct_image_from_latent_vectors(decoder, Z):
+    ''''''
+    return decoder(Z).mean()
+
+
+
+def plot_recontructed_images(X):
+    ''''''
+    n_samples = len(X)
+    f, axs = plt.subplots(1, n_samples, figsize=(16, 6))
+    if n_samples == 1:
+        plt.imshow(X[0])
+    else :
+        for j in range(n_samples):
+            axs[j].imshow(X[j])
+            axs[j].axis('off')
+    plt.show()
+    
+    
+    
 # Run your function to generate new images
 
 def plot_generate_images(prior, decoder):

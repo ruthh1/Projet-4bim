@@ -283,12 +283,3 @@ if __name__ == "__main__":
     #print(X4)
     Y = one_iteration_mutation([X1], '+', 3, 1)
     print(Y)
-
-
-#Faire des units tests
-#Faire la fonction selection_function
-#faire la documentation
-#AVoir un algorithme génétique qui marche
-#mettre une probabilité de mutations ?
-#Penser à rajouter des images aléatoires et à modifier le step-size
-#Utiliser les attributs ?

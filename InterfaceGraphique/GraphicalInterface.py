@@ -185,11 +185,11 @@ button_next = tk.Button(ImageFrame5,text=">>NEXT",fg="black",bg="white",height=2
 button_next.place(relx=0.6,rely=0.85)
 #Raffichage de la fenêtre avec nouvelle liste d'images
 
-remove_all_suspects_images() # une fois finie et les dossiers envoyé dans algo !! # est ce qu'on le met au début aussi ou pas ?? 
+remove_all_suspects_images() # une fois finie et les dossiers envoyé dans algo !! # est ce qu'on le met au début aussi ou pas ??
 print()
 
 
-#os.remove("./suspects"+"/")
+
 
 
 

@@ -23,9 +23,10 @@ import tensorflow_probability as tfp
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from PIL import Image
 
 # custom import
-from utils import *
+from project4bim2022_g2.utils import *
 
 tfd = tfp.distributions
 tfpl = tfp.layers
@@ -297,7 +298,11 @@ def generate_images(prior, decoder, n_samples):
         tf.Tensor : images generated
     """
     z = prior.sample(n_samples)
-    return decoder(z).mean()
+    sampled_images = decoder(z).mean()
+    for count, value in enumerate(sampled_images):
+        image = Image.fromarray((value.numpy()*255).astype('uint8'), 'RGB')
+        image.save('gen'+str(count)+'.png')
+    return sampled_images
 
 
 # Run your function to generate new images
@@ -315,7 +320,6 @@ def plot_generate_images(prior, decoder):
     plt.tight_layout()
     plt.show()
     plt.savefig('image_generation.png')
-
 
 # ## Modify generations with attribute vector
 #

@@ -17,8 +17,8 @@ def start_algo():
     ''''''
     global window2
     window2 = tk.Toplevel(window)
-    window.withdraw()
-    #window.iconify()
+    #window.withdraw()
+    window.iconify()
     window2.title("Robot Portrait")
     window2.geometry("1000x650")
     window2.resizable(height = False, width = False)
@@ -40,7 +40,7 @@ def contenu_window(z):
     Title.configure(font=("Helvetica",20,"underline"))
     Title.place(relx=0.2,rely=0.1)'''
 
-    ToDo=tk.Label(TextFrame, text="Choose between 1 and 4 images most representing the suspect.\n You can select an image by clicking on the associated button. Once an image is selected, the button will turn blue. When you are done with the selection, click on the 'next' button. \n Then,  the program will propose you other images generated from the ones that you have selected. \n If you think there is one image representing exactly the suspect, you can click on 'The selected image corresponds to the criminal', and the program will display the chosen image and end",wraplength = 900, bg="white", width = window_width)
+    ToDo=tk.Label(TextFrame, text="Choose between 1 and 4 images that most represent the suspect.\n You can select an image by clicking on the associated button. Once an image is selected, the button will turn blue. When you are done with the selection, click on the 'next' button. \n Then,  the program will propose you other images generated from the ones that you have selected. \n If you think there is one image representing exactly the suspect, you can click on 'The selected image corresponds to the criminal', and the program will display the chosen image and end",wraplength = 900, bg="white", width = window_width)
     #fontTitle=tkFont.Font(size=16)
     ToDo.configure(font=("Helvetica",12))
     ToDo.place(relx = 0.5, rely = 0.5)
@@ -142,7 +142,7 @@ def contenu_window(z):
     #while iteration < nbre_iter :
     button_next = tk.Button(Frame_bas,text=">>NEXT",fg="black",bg="white",height=1,width=8,command=lambda: [add_1(), ask_confirmation(z)])
     button_next.place(relx = 0.9 , rely = 0.2)
-    bouton_fin = tk.Button (Frame_bas, text = "The selected image corresponds to the criminal", command=lambda :[ask_confirmation_end(z), set_iteration()], bg="white")
+    bouton_fin = tk.Button (Frame_bas, text = "I have found my suspect", command=lambda :[ask_confirmation_end(z), set_iteration()], bg="white")
     bouton_fin.place(relx = 0.37, rely = 0.2 )
     bouton = tk.Button (Frame_bas, text = "QUIT", command= lambda : [set_iteration(),fermer_tout()])
     bouton.pack()
@@ -233,13 +233,22 @@ def ask_confirmation(z):
     ask_the_client = tk.messagebox.askyesno("Your selection","Did you select all the wanted files? [yes/no]")
     if ask_the_client == 1 :
         next_step(z, suspects)
+    else :
+        contenu_window(z)
 
 
 def ask_confirmation_end(z):
     ''''''
     ask_the_client = tk.messagebox.askyesno("Your selection","Did you select the suspect's image? [yes/no]")
     if ask_the_client == 1:
-        end_algo(z, suspects)
+        if len(suspects) == 1:
+            end_algo(z, suspects)
+        else :
+            messagebox.showwarning("Wrong number of images selected", "You should select only one image")
+            contenu_window(z)
+    else :
+        contenu_window(z)
+
 
 
 def next_step(z,suspects):
@@ -372,11 +381,11 @@ if __name__ == "__main__":
     encoder = get_encoder(latent_dim=50, kl_regularizer=get_kl_regularizer(prior))
     decoder = get_decoder(latent_dim=50)
 
-    #encoder.load_weights("VAE_encoder2")
-    #decoder.load_weights("VAE_decoder2")
+    encoder.load_weights("VAE_encoder2")
+    decoder.load_weights("VAE_decoder2")
 
-    encoder.load_weights("./model_vae/encoder/saved_encoder")
-    decoder.load_weights("./model_vae/decoder/saved_decoder")
+    #encoder.load_weights("./model_vae/encoder/saved_encoder")
+    #decoder.load_weights("./model_vae/decoder/saved_decoder")
 
     global z
     #z = generation_init()
@@ -393,3 +402,13 @@ if __name__ == "__main__":
     nbre_iter_max = 5
 
     welcome_window()
+
+
+
+
+#Faire une fonction qui fait tout l'encodeur d'un coup
+#Revoir les exigences du prof
+#Questions Sergio -> tuto ?
+#Utiliser la dernière partie du truc de Mathieu pour faire une pré-sélection au début (homme/femme par ex), et qui renvoie à la fin : "le suspect recherché est un homme/femme, de couleur de peau ....., voici un portrait robot le représentant"
+#Faire la documentation pour chaque fonction
+#Ranger le gitlab

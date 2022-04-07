@@ -315,13 +315,9 @@ def generate_latent_vectors(prior, n_samples):
         Z2 = np.array(Z3)'''
     return Z2
 
-
-
 def reconstruct_image_from_latent_vectors(decoder, Z):
     ''''''
     return decoder(Z).mean()
-
-
 
 def plot_recontructed_images(X):
     ''''''
@@ -334,7 +330,6 @@ def plot_recontructed_images(X):
             axs[j].imshow(X[j])
             axs[j].axis('off')
     plt.show()
-    
     
     
 # Run your function to generate new images

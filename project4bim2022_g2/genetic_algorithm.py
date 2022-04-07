@@ -242,7 +242,7 @@ def adjust_children(List_parents, prior):
     ''''''
     n = len(List_parents)
     if n == 1:
-        L = one_iteration_mutation(List_parents, ',', 4, 2)
+        L = one_iteration_mutation(List_parents, ',', 4, 1.5)
         L = np.vstack([L, one_iteration_mutation(List_parents, '+', 3, 1)])
         #print(L)
         new_images = generate_latent_vectors(prior, 2)

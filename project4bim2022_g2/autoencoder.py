@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 from PIL import Image
 
 # custom import
-from project4bim2022_g2.utils import *
+from utils import *
 
 tfd = tfp.distributions
 tfpl = tfp.layers
@@ -304,6 +304,7 @@ def generate_images(prior, decoder, n_samples):
         image.save('gen'+str(count)+'.png')
     return sampled_images
 
+
 def generate_latent_vectors(prior, n_samples):
     ''''''
     Z = prior.sample(n_samples)
@@ -316,11 +317,9 @@ def generate_latent_vectors(prior, n_samples):
     return Z2
 
 
-
 def reconstruct_image_from_latent_vectors(decoder, Z):
     ''''''
     return decoder(Z).mean()
-
 
 
 def plot_recontructed_images(X):
@@ -329,14 +328,13 @@ def plot_recontructed_images(X):
     f, axs = plt.subplots(1, n_samples, figsize=(16, 6))
     if n_samples == 1:
         plt.imshow(X[0])
-    else :
+    else:
         for j in range(n_samples):
             axs[j].imshow(X[j])
             axs[j].axis('off')
     plt.show()
-    
-    
-    
+
+
 # Run your function to generate new images
 
 def plot_generate_images(prior, decoder):
@@ -375,15 +373,18 @@ def load_labels_and_image_arrays(split):
     return labels[:num_files], all_images_np
 
 
+def train(vae, train_ds, val_ds, epochs):
+    vae.fit(train_ds, validation_data=val_ds, epochs=epochs)
+    return None
+
 ##========================= MAIN =======================##
+
 
 if __name__ == "__main__":
     print("Tensorflow Version: ", tf.__version__)
     print("Tensorflow Probability Version: ", tfp.__version__)
 
     #train_ds, val_ds, test_ds = load_datasets()
-
-    # display_examples(train_ds)
 
     # Run your function to get the prior distribution with 2 components and latent_dim = 50
     prior = get_prior(num_modes=2, latent_dim=50)
@@ -392,16 +393,8 @@ if __name__ == "__main__":
     encoder = get_encoder(
         latent_dim=50, kl_regularizer=get_kl_regularizer(prior))
 
-    # Print the encoder summary
-    # encoder.summary()
-    # tf.keras.utils.plot_model(encoder)
-
     # Run your function to get the decoder
     decoder = get_decoder(latent_dim=50)
-
-    # Print the decoder summary
-    # decoder.summary()
-    # tf.keras.utils.plot_model(decoder)
 
     # ## Link the encoder and decoder together
     #
@@ -421,6 +414,11 @@ if __name__ == "__main__":
     # Or just load the weights
     encoder.load_weights("./model_vae/encoder/saved_encoder")
     decoder.load_weights("./model_vae/decoder/saved_decoder")
+
+    #vae.fit(train_ds, validation_data=val_ds, epochs=1)
+
+    # encoder.save_weights("./model_vae/encoder/saved_encoder")
+    # decoder.save_weights("./model_vae/decoder/saved_decoder")
 
     # Evaluate the model on the test set
     #test_loss = vae.evaluate(test_ds)

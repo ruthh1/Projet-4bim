@@ -96,9 +96,9 @@ def load_dataset(split):
     Returns:
         tensorflow.python.data.ops.dataset_ops.BatchDataset: Tensorflow Dataset containing the images
     """
-    if os.path.exists('./img_align_celeba/{}.npy'.format(split)):
+    if os.path.exists('../img_align_celeba/{}.npy'.format(split)):
         list_ds = tf.data.Dataset.from_tensor_slices(
-            np.load('./img_align_celeba/{}.npy'.format(split)))
+            np.load('../img_align_celeba/{}.npy'.format(split)))
         ds = list_ds.map(lambda x: (x, x))
         return ds
     else:
@@ -107,24 +107,22 @@ def load_dataset(split):
 
 
 def load_datasets():
-    path = "../img_align_celeba/training/"
-
-    files = os.listdir(path)
-
-    imageList = files[0:10000]
-    imageList_val = files[10001:11000]
-    imageList_test = files[11001:12000]
-
     height = 64
     width = 64
     channels = 3
-    out_train = './img_align_celeba/dataset.npy'
-    out_val = './img_align_celeba/dataset_val.npy'
-    out_test = './img_align_celeba/dataset_test.npy'
+    out_train = '../img_align_celeba/dataset.npy'
+    out_val = '../img_align_celeba/dataset_val.npy'
+    out_test = '../img_align_celeba/dataset_test.npy'
 
-    if os.path.exists(out_test):
+    if not os.path.exists(out_test):
+        path = "../img_align_celeba/training/"
+        files = os.listdir(path)
+        imageList_test = files[11001:12000]
         save_dataset(path, imageList_test, height, width, channels, out_test)
-    if os.path.exists(out_val):
+    if not os.path.exists(out_val):
+        path = "../img_align_celeba/training/"
+        files = os.listdir(path)
+        imageList_val = files[10001:11000]
         save_dataset(path, imageList_val, height, width, channels, out_val)
 
     # Load the training, validation and testing datasets splits

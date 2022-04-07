@@ -2,6 +2,7 @@
 import numpy as np
 import random
 import matplotlib.pyplot as plt
+from autoencoder import *
 
 
 #All function definition
@@ -86,9 +87,9 @@ def concatenate_list(X):
     if n == 1 :
         return X
     else :
-        for i in range(n):
+        for i in range(1,n):
             for element in X[i]:
-                Y = np.insert(Y, element)
+                Y = np.vstack([Y, element])
         return Y
 
 
@@ -219,16 +220,70 @@ def one_iteration_mutation(List_parents, type_evol, n, step_size) :
             Parent = generation_copies(parent, n)
             #print(Parent)
             Children = mutation(Parent, step_size, 1)
-            #print(Children)
+            #print("Enfants générés par mutation",Children)
             Children = np.vstack([Children, parent])
+            #print("Enfants après ajout parent", Children)
             #print(Children)
-            L_children.append(Children)
-            #print(L_children)
+            for element in Children :
+                #print(element)
+                L_children.append(element)
+            #print("Longueur liste Enfants", len(L_children))
         else :
             Parent = generation_copies(parent, n)
             Children = mutation(Parent, step_size, 1)
-            L_children.append(Children)
-    return concatenate_list(L_children)
+            #print(Children)
+            for element in Children :
+                L_children.append(element)
+        #print("Liste de tous les enfants concaténés", concatenate_list(L_children))
+    return np.array(L_children)
+
+
+def adjust_children(List_parents, prior):
+    ''''''
+    n = len(List_parents)
+    if n == 1:
+        L = one_iteration_mutation(List_parents, ',', 4, 2)
+        L = np.vstack([L, one_iteration_mutation(List_parents, '+', 3, 1)])
+        #print(L)
+        new_images = generate_latent_vectors(prior, 2)
+        L = np.vstack([L, new_images])
+        #print(L)
+        #random.shuffle(L)
+        return L
+    elif n == 2 :
+        L = one_iteration_mutation(List_parents, ',', 3, 1.5)
+        new_images = generate_latent_vectors(prior, 2)
+        L = np.vstack([L, new_images])
+        recombination1 = recombination_k_parents(List_parents, 1)
+        recombination2 = recombination_k_parents(List_parents, 0)
+        L = np.vstack([L, recombination1])
+        L = np.vstack([L, recombination2])
+        return L
+    elif n == 3 :
+        L = one_iteration_mutation(List_parents, ',', 2, 1.5)
+        new_images = generate_latent_vectors(prior, 2)
+        L = np.vstack([L, new_images])
+        recombination1 = recombination_k_parents(List_parents, 1)
+        recombination2 = recombination_k_parents(List_parents, 0)
+        L = np.vstack([L, recombination1])
+        L = np.vstack([L, recombination2])
+        return L
+    elif n == 4 :
+        L = one_iteration_mutation(List_parents, ',', 1, 1.5)
+        new_images = generate_latent_vectors(prior, 2)
+        L = np.vstack([L, new_images])
+        recombination1 = recombination_k_parents(List_parents, 1)
+        recombination2 = recombination_k_parents(List_parents, 0)
+        recombination3 = recombination_k_parents([List_parents[0], List_parents[1]], 0)
+        recombination4 = recombination_k_parents([List_parents[2], List_parents[3]], 1)
+        L = np.vstack([L, recombination1])
+        L = np.vstack([L, recombination2])
+        L = np.vstack([L, recombination3])
+        L = np.vstack([L, recombination4])
+        return L
+    #elif n == 5 :
+
+
 
 
 

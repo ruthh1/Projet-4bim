@@ -1,5 +1,5 @@
 from autoencoder import *
-from Genetic_algorithm import *
+from genetic_algorithm import *
 #from interface_graphique import *
 
 import numpy as np

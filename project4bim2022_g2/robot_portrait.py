@@ -380,8 +380,8 @@ if __name__ == "__main__":
     encoder = get_encoder(latent_dim=50, kl_regularizer=get_kl_regularizer(prior))
     decoder = get_decoder(latent_dim=50)
 
-    encoder.load_weights("VAE_encoder2")
-    decoder.load_weights("VAE_decoder2")
+    encoder.load_weights("./model_vae/VAE_encoder2")
+    decoder.load_weights("./model_vae/VAE_decoder2")
 
     #encoder.load_weights("./model_vae/encoder/saved_encoder")
     #decoder.load_weights("./model_vae/decoder/saved_decoder")
@@ -402,12 +402,3 @@ if __name__ == "__main__":
 
     welcome_window()
 
-
-
-
-#Faire une fonction qui fait tout l'encodeur d'un coup
-#Revoir les exigences du prof
-#Questions Sergio -> tuto ?
-#Utiliser la dernière partie du truc de Mathieu pour faire une pré-sélection au début (homme/femme par ex), et qui renvoie à la fin : "le suspect recherché est un homme/femme, de couleur de peau ....., voici un portrait robot le représentant"
-#Faire la documentation pour chaque fonction
-#Ranger le gitlab

@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 from PIL import Image
 
 # custom import
-from utils import *
+from .utils import *
 
 tfd = tfp.distributions
 tfpl = tfp.layers

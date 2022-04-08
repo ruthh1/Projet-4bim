@@ -1,8 +1,10 @@
-Projet-4bim
-===========
+project4bim2022_g2
+==================
 
 .. toctree::
    :maxdepth: 4
 
-   module0
-   test
+   autoencoder
+   genetic_algorithm
+   robot_portrait
+   utils

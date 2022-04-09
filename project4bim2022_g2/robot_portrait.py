@@ -11,7 +11,7 @@ from PIL import Image, ImageTk
 
 # Fonctions de l'interface graphique
 
-ef start_algo():
+def start_algo():
     '''This function creates a 2nd window (on which the images will be displayed after) as a subwindow of the main window.
     With just this function, the window is empty but created.
     After creating the window, the function texte_window is called, which will display text in the window'''

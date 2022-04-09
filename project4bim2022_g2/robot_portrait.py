@@ -1,5 +1,5 @@
-from .autoencoder import *
-from .genetic_algorithm import *
+from project4bim2022_g2.autoencoder import *
+from project4bim2022_g2.genetic_algorithm import *
 
 import numpy as np
 import matplotlib.image as mpimg

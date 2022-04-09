@@ -1,19 +1,6 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# # VAE for the CelebA dataset
-#
-# > In this post, we will implement the variational AutoEncoder (VAE) for an image dataset of celebrity faces. This is the Programming Assignment of lecture "Probabilistic Deep Learning with Tensorflow 2" from Imperial College London.
-#
-# - toc: true
-# - badges: true
-# - comments: true
-# - author: Chanseok Kang
-# - categories: [Python, Coursera, Tensorflow_probability, ICL]
-# - image: images/celeba-reconstruct.png
-
-# ## Packages
-
+'''
+This module implements a variational autoencoder for the celeba dataset
+'''
 
 from tensorflow.keras.layers import Conv2D, BatchNormalization, Flatten, Dense, UpSampling2D, Reshape
 from tensorflow.keras.models import Model, Sequential
@@ -26,7 +13,7 @@ import matplotlib.pyplot as plt
 from PIL import Image
 
 # custom import
-from .utils import *
+from project4bim2022_g2.utils import *
 
 tfd = tfp.distributions
 tfpl = tfp.layers
@@ -34,34 +21,16 @@ tfb = tfp.bijectors
 
 plt.rcParams['figure.figsize'] = (10, 6)
 
-
-# ## Mixture of Gaussians distribution
-#
-# We will define a prior distribution that is a mixture of Gaussians. This is a more flexible distribution that is comprised of $K$ separate Gaussians, that are combined together with some weighting assigned to each.
-#
-# Recall that the probability density function for a multivariate Gaussian distribution with mean $\mu\in\mathbb{R}^D$ and covariance matrix $\Sigma\in\mathbb{R}^{D\times D}$ is given by
-#
-# $$
-# \mathcal{N}(\mathbf{z}; \mathbf{\mu}, \Sigma) = \frac{1}{(2\pi)^{D/2}|\Sigma|^{1/2}}
-# \exp\left(-\frac{1}{2}(\mathbf{z}-\mathbf{\mu})^T\Sigma^{-1}(\mathbf{z}-\mathbf{\mu})\right).
-# $$
-#
-# A mixture of Gaussians with $K$ components defines $K$ Gaussians defined by means $\mathbf{\mu}_k$ and covariance matrices $\Sigma_k$, for $k=1,\ldots,K$. It also requires mixing coefficients $\pi_k$, $k=1,\ldots,K$ with $\sum_{k} \pi_k = 1$. These coefficients define a categorical distribution over the $K$ Gaussian components. To sample an event, we first sample from the categorical distribution, and then again from the corresponding Gaussian component.
-#
-# The probability density function of the mixture of Gaussians is simply the weighted sum of probability density functions for each Gaussian component:
-#
-# $$
-# p(\mathbf{z}) = \sum_{k=1}^K \pi_k \mathcal{N}(\mathbf{z}; \mathbf{\mu}_k, \Sigma_k)
-# $$
-
-# ## Define the prior distribution
-#
-# We will define the mixture of Gaussians distribution for the prior, for a given number of components and latent space dimension. Each Gaussian component will have a diagonal covariance matrix. This distribution will have fixed mixing coefficients, but trainable means and standard deviations.
+'''
+Mixture of Gaussians distribution
+'''
 
 
 def get_prior(num_modes, latent_dim):
     """
-    Creates a mixture of gaussian distribution.
+    Defines a prior distribution that is a mixture of Gaussians. 
+    This is a more flexible distribution that is comprised of $K$ separate Gaussians, 
+    that are combined together with some weighting assigned to each.
 
 
     Args:
@@ -89,9 +58,9 @@ def get_prior(num_modes, latent_dim):
     return prior
 
 
-# Define the encoder Network
-#
-# We will now define the encoder network as part of the VAE. First, we will define the `KLDivergenceRegularizer` to use in the encoder network to add the KL divergence part of the loss.
+'''
+Define the encoder Network
+'''
 
 
 def get_kl_regularizer(prior_distribution):
@@ -115,7 +84,7 @@ def get_kl_regularizer(prior_distribution):
 
 
 def get_encoder(latent_dim, kl_regularizer):
-    """generates an encoder with a given latent dimension and a kl regularizer
+    """Generates an encoder with a given latent dimension and a kl regularizer
 
     Args:
         latent_dim (int): dimension of the latent space we want to encode the image to
@@ -142,13 +111,13 @@ def get_encoder(latent_dim, kl_regularizer):
     return encoder
 
 
-# ## Define the decoder network
-#
-# We'll define the decoder network for the VAE, which return IndependentBernoulli
-# distribution of `event_shape=(64, 64, 3)`
+'''
+Define the decoder network
+'''
+
 
 def get_decoder(latent_dim):
-    """generates the decoder of the vae, with a given latent dimension
+    """Generates the decoder of the vae, with a given latent dimension
 
     Args:
         latent_dim (int): latent dimension the image is encoded into
@@ -174,21 +143,9 @@ def get_decoder(latent_dim):
     return decoder
 
 
-# #### Define the average reconstruction loss
-#
-# You should now define the reconstruction loss that forms the remaining part of the negative ELBO objective. This function should take a batch of images of shape `(batch_size, 64, 64, 3)` in the first argument, and the output of the decoder after passing the batch of images through `vae` in the second argument.
-#
-# The loss should be defined so that it returns
-# $$
-#     -\frac{1}{n}\sum_{i=1}^n \log p(x_i|z_i)
-# $$
-# where $n$ is the batch size and $z_i$ is sampled from $q(z|x_i)$, the encoding distribution a.k.a. the approximate posterior. The value of this expression is always a scalar.
-#
-# Expression (1) is, as you know, is an estimate of the (negative of the) batch's average expected reconstruction loss:
-#
-# $$
-#     -\frac{1}{n}\sum_{i=1}^n \mathrm{E}_{Z\sim q(z|x_i)}\big[\log p(x_i|Z)\big]
-# $$
+'''
+Define the average reconstruction loss
+'''
 
 
 def reconstruction_loss(batch_of_images, decoding_dist):
@@ -202,18 +159,6 @@ def reconstruction_loss(batch_of_images, decoding_dist):
         tf.Tensor : scalar average expected reconstruction loss
     """
     return -tf.reduce_mean(decoding_dist.log_prob(batch_of_images), axis=0)
-
-
-# ## Compute reconstructions of test images
-#
-# We will now take a look at some image reconstructions from the encoder-decoder architecture.
-#
-# You should complete the following function, that uses `encoder` and `decoder` to reconstruct images from the test dataset. This function takes the encoder, decoder and a Tensor batch of test images as arguments. The function should be completed according to the following specification:
-#
-# * Get the mean of the encoding distributions from passing the batch of images into the encoder
-# * Pass these latent vectors through the decoder to get the output distribution
-#
-# Your function should then return the mean of the output distribution, which will be a Tensor of shape `(batch_size, 64, 64, 3)`.
 
 
 def reconstruct(encoder, decoder, batch_of_images):
@@ -237,7 +182,7 @@ def reconstruct(encoder, decoder, batch_of_images):
 
 def plot_reconstructions_test_ds(encoder, decoder):
     """
-    plots the reconstruction of the images versus the initial images
+    Plots the reconstruction of the images versus the initial images
 
     Args:
         encoder (Sequential): encoder of the vae
@@ -271,16 +216,9 @@ def plot_reconstructions_test_ds(encoder, decoder):
     return None
 
 
-# ## Sample new images from the generative model
-#
-# Now we will sample from the generative model; that is, first sample latent vectors from the prior, and then decode those latent vectors with the decoder.
-#
-# You should complete the following function to generate new images. This function takes the prior distribution and decoder network as arguments, as well as the number of samples to generate. This function should be completed according to the following:
-#
-# * Sample a batch of `n_samples` images from the prior distribution, to obtain a latent vector Tensor of shape `(n_samples, 50)`
-# * Pass this batch of latent vectors through the decoder, to obtain an Independent Bernoulli distribution with batch shape equal to `[n_samples]` and event shape equal to `[64, 64, 3]`.
-#
-# The function should then return the mean of the Bernoulli distribution, which will be a Tensor of shape `(n_samples, 64, 64, 3)`.
+'''
+Sample new images from the generative model
+'''
 
 
 def generate_images(prior, decoder, n_samples):
@@ -335,9 +273,14 @@ def plot_recontructed_images(X):
     plt.show()
 
 
-# Run your function to generate new images
-
 def plot_generate_images(prior, decoder):
+    '''
+    The function generates a list of images, plots them and saves them
+
+    Args:
+        prior (MixtureSameFamily): prior distribution
+        decoder (Sequential): trained decoder of the vae
+    '''
     n_samples = 10
     sampled_images = generate_images(prior, decoder, n_samples)
 
@@ -350,27 +293,6 @@ def plot_generate_images(prior, decoder):
     plt.tight_layout()
     plt.show()
     plt.savefig('image_generation.png')
-
-# ## Modify generations with attribute vector
-#
-# We will see how the latent space encodes high-level information about the images, even though it has not been trained with any information apart from the images themselves.
-#
-# As mentioned in the introduction, each image in the CelebA dataset is labelled according to the attributes of the person pictured.
-
-
-# Function to load labels and images as a numpy array
-
-def load_labels_and_image_arrays(split):
-    dataset = load_dataset(split)
-    num_files = np.load('./img_align_celeba/{}.npy'.format(split)).shape[0]
-
-    for all_images, _ in dataset.batch(num_files).take(1):
-        all_images_np = all_images.numpy()
-
-    labels = pd.read_csv(
-        './img_align_celeba/list_attr_celeba.txt', delimiter=r"\s+", header=1)
-    #labels = labels[labels['image_id'].isin(files)]
-    return labels[:num_files], all_images_np
 
 
 def train(vae, train_ds, val_ds, epochs):

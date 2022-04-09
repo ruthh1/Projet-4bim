@@ -2,7 +2,7 @@
 import numpy as np
 import random
 import matplotlib.pyplot as plt
-from .autoencoder import *
+from project4bim2022_g2.autoencoder import *
 
 
 # All function definition

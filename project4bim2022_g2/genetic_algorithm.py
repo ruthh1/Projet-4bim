@@ -2,12 +2,12 @@
 import numpy as np
 import random
 import matplotlib.pyplot as plt
-from autoencoder import *
+from .autoencoder import *
 
 
 #All function definition
 
-def generation_copies(X,n):
+def generation_copies(X, n):
     '''This function generates n copies of the parent X (that will serve to create the final children)
     Args:
         X (np.array) = vector of the latent space of a parent
@@ -188,23 +188,101 @@ def adjust_children(List_parents, prior):
 
 ## Main program
 if __name__ == "__main__":
+    
+    print("Unit test for generation_copies(n): ")
+    L = np.array([1.0,2.0,3.0])
+    Ln = generation_copies(L, 3)
+    print(len(Ln) == 3)  #If true, the function generated the right number of copies
+    print(Ln[0] == Ln[1])  #If true, the 2 first elements are identical
+    print(Ln[0] == Ln[2])   #If these 2 lines are true, the function is working as expected
+
+
+    print("Unit test for mutation_un_vecteur")
+    print("L before any mutation", L)
+    L = mutation_un_vecteur(L, 1, 0)
+    print("L after mutation with probability 0", L)      #Here, the probability of mutation is 0, so L must not have changed
+    L = mutation_un_vecteur(L, 1, 1)
+    print("L after mutation with probability 1", L)     #Here, each element of the vector should have been mutated (by addind a random number)
+
+
+    print("Unit test for mutation")
+    #Dans le cas où X contient plus de 1 vecteur
     X = np.array([[1.0,2.0,3.0],[2.0,5.0,9.0]])
-    #print(X)
-    #Y = mutation(X,1, 1)
-    #print(Y)
+    print("X avant mutation", X)
+    X = mutation(X, 1, 1)
+    print("X après mutation", X)
+    #Dans le cas où X contient 1 vecteur
+    X = np.array([[1.0,2.0,3.0]])
+    print("X1 avant mutation", X)
+    X = mutation(X, 1, 1)
+    print("X après mutation", X)
+
+
+    print("Unit test for recombination_2parents_moy")
     X1 = np.array([1.0,2.0,3.0])
+    print("Parent1", X1)
     X2 = np.array([5.0,6.0,7.0])
-    X3 = recombination_2parents_moy(X1, X2, 1)
-    #print(X3)
-    X4 = recombination_k_parents(X, 0)
-    #print(X4)
-    Y = one_iteration_mutation([X1], '+', 3, 1)
-    print(Y)
+    print("Parent2", X2)
+
+    X3 = recombination_2parents_moy(X1, X2, 1)  #Ici, la probabilité de calculer la moyenne des 2 éléments à chaque position est de 1 donc chaque élément de X3 doit être la moyenne de X1 et X2
+    print("Recombination moyenne", X3)
+    XX = np.vstack([X1, X2])
+    print(XX)
+    Xmoy = np.mean(XX, axis=0)
+    print(Xmoy)
+    print(X3 == Xmoy)  #Should be true if works correctly
+
+    X4 = recombination_2parents_moy(X1, X2, 0)
+    print("Recombination", X4)       #Chaque élément de X4 doit correspondre soit à l'élément de X1 à la même position, soit à l'élément de X2
+    for i in range(len(X4)):
+        if X4[i] == X1[i]:
+            print(True)
+        elif X4[i] == X2[i]:
+            print(True)
+        else:
+            print(False)
 
 
-#Faire des units tests
-#Faire la fonction selection_function
-#faire la documentation
-#mettre une probabilité de mutations ?
-#Penser à rajouter des images aléatoires et à modifier le step-size
-#Utiliser les attributs ?
+    print("Unit test for recombination_k_parents")
+    Xkmoy = recombination_k_parents(XX, 1)
+    print(Xkmoy == Xmoy)
+    Xk = recombination_k_parents(XX, 0)
+    for i in range(len(Xk)):
+        if X4[i] == XX[0][i]:
+            print(True)
+        elif X4[i] == XX[1][i]:
+            print(True)
+        else:
+            print(False)
+
+    #Avec plus de 2 parents
+    X5 = np.array([[1.0,2.0,3.0],[2.0,5.0,9.0],[5.0,4.0,3.0]])
+    Xkmoy5 = recombination_k_parents(X5, 1)
+    Xk5 = recombination_k_parents(X5, 0)
+    print(Xkmoy5 == np.mean(X5, axis=0))
+    for i in range(len(Xk5)) :
+        if Xk5[i] == X5[0][i]:
+            print(True)
+        elif Xk5[i] == X5[1][i]:
+            print(True)
+        elif Xk5[i] == X5[2][i]:
+            print(True)
+        else:
+            print(False)
+
+
+    print ("Unit test for one_iteration_mutation")
+    X5mut = one_iteration_mutation(X5, '+', 1, 1)
+    print(len(X5mut) == 6)
+    X5mut2 = one_iteration_mutation(X5, ',', 1, 1)
+    print(X5mut2)
+    print(len(X5mut2) == 3)
+
+    #Avec plusieurs enfants
+    X5mut = one_iteration_mutation(X5, '+', 3, 1)
+    print(len(X5mut) == 12)
+
+    #Avec un unique vecteur comme parent
+    X1mut = one_iteration_mutation([X1], '+', 3, 1)
+    print(len(X1mut) == 4)
+    print(X1 == X1mut[-1])   #Le parent est bien gardé comme le veut le type d'évolution '+'

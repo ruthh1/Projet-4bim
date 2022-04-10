@@ -170,7 +170,7 @@ def adjust_children(List_parents, prior):
         # random.shuffle(L)
         return L
     elif n == 2:
-        L = one_iteration_mutation(List_parents, ',', 3, 1.5)
+        L = one_iteration_mutation(List_parents, ',', 3, 1.25)
         new_images = generate_latent_vectors(prior, 2)
         L = np.vstack([L, new_images])
         recombination1 = recombination_k_parents(List_parents, 1)

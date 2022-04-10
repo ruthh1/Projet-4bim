@@ -4,7 +4,7 @@ The goal of this project is to create a program that can generate a robot portra
 
 
 
-## Installation
+### Installation
 
 Run this command on your terminal :
 
@@ -26,10 +26,10 @@ https://github.com/Mathieu414/4bimProject_Group2/blob/master/README.md
 That will create a virtual environment and install all the modules necessary for the program to run
 
 
-## Documentation
+### Documentation
 
 
-## Authors
+### Authors
 
 **Group 2 4BIM**:
 

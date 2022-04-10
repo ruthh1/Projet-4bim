@@ -28,7 +28,7 @@ That will create a virtual environment and install all the modules necessary for
 
 ### Documentation
 
-
+HTML files can be found in docs/build/html
 
 ### Authors
 

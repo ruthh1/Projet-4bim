@@ -122,14 +122,16 @@ def contenu_window(z):
 
 def fermer_tout():
     '''This function ends the program and closes all the windows. It is called when the user clicks on the button QUIT'''
-    #On détruit tous les widgets (y compris les sous-fenêtres) de window2
-    for c in window2.winfo_children():
-        c.destroy()
-    #On détruit tous les widgets (y compris les sous-fenêtres) de window
-    for c in window.winfo_children():
-        c.destroy()
-    #On détruit la fenêtre principale
-    window.destroy()
+    ask_the_client = tk.messagebox.askyesno("Quit","Do you really want to quit ? All the windows will be closed")
+    if ask_the_client == 1 :
+        #On détruit tous les widgets (y compris les sous-fenêtres) de window2
+        for c in window2.winfo_children():
+            c.destroy()
+        #On détruit tous les widgets (y compris les sous-fenêtres) de window
+        for c in window.winfo_children():
+            c.destroy()
+        #On détruit la fenêtre principale
+        window.destroy()
     
     
 
@@ -423,7 +425,7 @@ def run():
     suspects = []
 
     global nbre_iter_max
-    nbre_iter_max = 5
+    nbre_iter_max = 20
 
     welcome_window()
 

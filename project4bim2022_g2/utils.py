@@ -7,7 +7,8 @@ import matplotlib.pyplot as plt
 
 def center_crop(image, out_height, out_width):
     """
-
+    This function centers the image ensuring that the image's aspect ratio is maintained and have the dimensions out_height*out_width
+    
     Args:
         image(numpy ndarray): list of floats representing the pixels of an image
         out_height(int) : height targeted
@@ -24,7 +25,7 @@ def center_crop(image, out_height, out_width):
 
 
 def resize_maintain_aspect(image, target_h, target_w):
-    """resize the image while maintaining the proportions
+    """Resize the image while maintaining the proportions
 
     Args:
         image (numpy ndarray): list of floats representing the pixels of an image
@@ -48,8 +49,7 @@ def resize_maintain_aspect(image, target_h, target_w):
 
 
 def save_dataset(path, imageList, height, width, channels, out):
-    """method to save a list of images from a directory into a binary numpy array
-    file .npy
+    """Method to save a list of images from a directory into a binary numpy array file .npy
 
     Args:
         path (string): path to the directory where the images are
@@ -63,7 +63,6 @@ def save_dataset(path, imageList, height, width, channels, out):
     # data is float32, labels are integers
     x = np.ndarray(shape=(len(imageList), height,
                    width, channels), dtype=np.float32)
-
     # loop through all images
     for i in range(len(imageList)):
         # open image to numpy array
@@ -84,11 +83,9 @@ def save_dataset(path, imageList, height, width, channels, out):
     return None
 
 
-# Acknowledgement to https://github.com/foolmarks/images_to_npy/blob/8b85c5d40346b7bf60ac340e42faa2bc5508b0cf/img_to_npy.py#L19
-
 
 def load_dataset(split):
-    """method to load the dataset from a .npy file with the 'split' name
+    """Method to load the dataset from a .npy file with the 'split' name
 
     Args:
         split (string): names of the dataset targeted
@@ -96,9 +93,9 @@ def load_dataset(split):
     Returns:
         tensorflow.python.data.ops.dataset_ops.BatchDataset: Tensorflow Dataset containing the images
     """
-    if os.path.exists('../img_align_celeba/{}.npy'.format(split)):
+    if os.path.exists('./{}.npy'.format(split)):
         list_ds = tf.data.Dataset.from_tensor_slices(
-            np.load('../img_align_celeba/{}.npy'.format(split)))
+            np.load('./{}.npy'.format(split)))
         ds = list_ds.map(lambda x: (x, x))
         return ds
     else:
@@ -106,23 +103,39 @@ def load_dataset(split):
         return None
 
 
-def load_datasets():
+def load_datasets(path = "../../Projet 4BIM/img_align_celeba/", x = 50000):
+    '''
+    This function creates and loads the dataset of images, splitting it into a train_ds, val_ds and test_ds.
+    You must indicate as argument in the function the directory of where the images are in your computer.
+    It is also possible to change the number of images on which the training is made, in the function itself.
+    The test and val dataset corresponds to 1/10 of the train_ds
+
+    Args:
+        path(str):directory of the CelebA dataset
+    Returns:
+        tensorflow.python.data.ops.dataset_ops.BatchDataset: train_ds, dataset that will be used to train the neural network, val_ds, dataset that will be used for validation, test_ds, dataset that will be used for testing
+    '''
     height = 64
     width = 64
     channels = 3
-    out_train = '../img_align_celeba/dataset.npy'
-    out_val = '../img_align_celeba/dataset_val.npy'
-    out_test = '../img_align_celeba/dataset_test.npy'
+    out_train = './dataset.npy'
+    out_val = './dataset_val.npy'
+    out_test = './dataset_test.npy'
 
-    if not os.path.exists(out_test):
-        path = "../img_align_celeba/training/"
+    if not os.path.exists(out_train):
+        path = path
         files = os.listdir(path)
-        imageList_test = files[11001:12000]
+        imageList_train = files[0:x]
+        save_dataset(path, imageList_train, height, width, channels, out_train)
+    if not os.path.exists(out_test):
+        path = path
+        files = os.listdir(path)
+        imageList_test = files[x+x/10+1:x+2*x/10]
         save_dataset(path, imageList_test, height, width, channels, out_test)
     if not os.path.exists(out_val):
-        path = "../img_align_celeba/training/"
+        path = path
         files = os.listdir(path)
-        imageList_val = files[10001:11000]
+        imageList_val = files[x+1:x+x/10]
         save_dataset(path, imageList_val, height, width, channels, out_val)
 
     # Load the training, validation and testing datasets splits

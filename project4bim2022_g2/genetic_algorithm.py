@@ -2,7 +2,7 @@
 import numpy as np
 import random
 import matplotlib.pyplot as plt
-from project4bim2022_g2.autoencoder import *
+from .autoencoder import *
 
 
 # All function definition
@@ -86,7 +86,6 @@ def recombination_2parents_moy(X1, X2, p):
     return np.array(new_vector)
 
 
-
 def recombination_k_parents(X, p):
     '''
     Calcule le vecteur obtenu à partir d'une recombinaison à partir des k parents de la liste X, qui calcule la moyenne des coordonnées pour chaque élément des vecteurs latents, avec une probabilité p pour chaque élément
@@ -118,7 +117,6 @@ def recombination_k_parents(X, p):
     return np.array(new_vector)
 
 
-
 def one_iteration_mutation(List_parents, type_evol, n, step_size):
     '''
     This function calculates the next generation of children from a list of parents. The children are generated only by mutation here, according to the type of evolution str_images_chosen
@@ -145,7 +143,6 @@ def one_iteration_mutation(List_parents, type_evol, n, step_size):
             for element in Children:
                 L_children.append(element)
     return np.array(L_children)
-
 
 
 def adjust_children(List_parents, prior):
@@ -202,8 +199,7 @@ def adjust_children(List_parents, prior):
         L = np.vstack([L, recombination3])
         L = np.vstack([L, recombination4])
         return L
-    
-    
+
 
 # Main program
 if __name__ == "__main__":

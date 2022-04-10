@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 from PIL import Image
 
 # custom import
-from project4bim2022_g2.utils import *
+from .utils import *
 
 tfd = tfp.distributions
 tfpl = tfp.layers

@@ -425,7 +425,7 @@ def run():
     suspects = []
 
     global nbre_iter_max
-    nbre_iter_max = 20
+    nbre_iter_max = 15
 
     welcome_window()
 

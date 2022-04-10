@@ -1,6 +1,6 @@
 # Projet-4bim
 
-The goal of this project is to create a program that can generate a robot portrait of a presumed criminal thanks to the help of a witness. The program generates images of faces that evolve and go closest and closest to the suspect according to the witness's choices between all the faces displayed.
+The goal of this project is to create a program that can generate a robot portrait of a presumed criminal thanks to the help of a witness. The program generates images of faces that evolve and go closest and closest to the suspect's face according to the witness's choices between all the faces displayed.
 
 
 

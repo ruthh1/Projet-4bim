@@ -429,4 +429,3 @@ def run():
 
     welcome_window()
 
-    welcome_window()

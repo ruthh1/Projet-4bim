@@ -29,14 +29,14 @@ That will create a virtual environment and install all the modules necessary for
 
 ## Authors
 
-**Group 2 4BIM**
+**Group 2 4BIM**:
 
-Ruth BENAYOUN
+- Ruth BENAYOUN
 
-Noémie GOEURIOT
+- Noémie GOEURIOT
 
-Yasmine KAMILI
+- Yasmine KAMILI
 
-Mathieu PERRIN
+- Mathieu PERRIN
 
-Seungyun SHIN
+- Seungyun SHIN

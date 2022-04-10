@@ -158,38 +158,48 @@ def adjust_children(List_parents, prior):
     '''
     n = len(List_parents)
     if n == 1:
+        #On génère 4 enfants à partir du parent, avec une step_size de 1.5 (un peu plus éloigné du parent)
         L = one_iteration_mutation(List_parents, ',', 4, 1.5)
+        #On génère 3 enfants avec une step_size plus petite (donc plus proche du parent), et on garde le parent
         L = np.vstack([L, one_iteration_mutation(List_parents, '+', 3, 1)])
         # print(L)
+        #On génère 2 nouvelles images
         new_images = generate_latent_vectors(prior, 2)
         L = np.vstack([L, new_images])
         # print(L)
         # random.shuffle(L)
         return L
     elif n == 2:
+        #On génère 3 enfants à partir de chaque parent
         L = one_iteration_mutation(List_parents, ',', 3, 1.25)
         new_images = generate_latent_vectors(prior, 2)
         L = np.vstack([L, new_images])
+        #On génère une recombinaison par moyenne et une où on choisit les coordonnées dans l'un ou l'autre des vecteurs
         recombination1 = recombination_k_parents(List_parents, 1)
         recombination2 = recombination_k_parents(List_parents, 0)
         L = np.vstack([L, recombination1])
         L = np.vstack([L, recombination2])
         return L
     elif n == 3:
+        #On génère 2 enfants à partir de chaque parent
         L = one_iteration_mutation(List_parents, ',', 2, 1.5)
         new_images = generate_latent_vectors(prior, 2)
         L = np.vstack([L, new_images])
+         #On génère une recombinaison par moyenne et une où on choisit les coordonnées dans l'un ou l'autre des vecteurs
         recombination1 = recombination_k_parents(List_parents, 1)
         recombination2 = recombination_k_parents(List_parents, 0)
         L = np.vstack([L, recombination1])
         L = np.vstack([L, recombination2])
         return L
     elif n == 4:
+        #On génère 1 enfant à partir de chaque parent
         L = one_iteration_mutation(List_parents, ',', 1, 1.5)
         new_images = generate_latent_vectors(prior, 2)
         L = np.vstack([L, new_images])
+        #On génère une recombinaison par moyenne et une où on choisit les coordonnées dans l'un ou l'autre des vecteurs
         recombination1 = recombination_k_parents(List_parents, 1)
         recombination2 = recombination_k_parents(List_parents, 0)
+        #On génère une recombinaison par moyenne et une où on choisit les coordonnées dans l'un ou l'autre des vecteurs à partir de seulement 2 parents
         recombination3 = recombination_k_parents(
             [List_parents[0], List_parents[1]], 0)
         recombination4 = recombination_k_parents(

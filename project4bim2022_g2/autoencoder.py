@@ -28,18 +28,18 @@ Mixture of Gaussians distribution
 
 def get_prior(num_modes, latent_dim):
     """
-    Defines a prior distribution that is a mixture of Gaussians. 
-    This is a more flexible distribution that is comprised of $K$ separate Gaussians, 
+    Defines a prior distribution that is a mixture of Gaussians.
+    This is a more flexible distribution that is comprised of K separate Gaussians,
     that are combined together with some weighting assigned to each.
 
 
     Args:
-        num_modes (int): 
+        num_modes (int):
         latent_dim (int): latent dimension we want to encode the image in
 
     Returns:
-        tfp.distributions.MixtureSameFamily : Mixture of gaussian distribution, with variable means and 
-        standart deviations
+        tfp.distributions.MixtureSameFamily : Mixture of gaussian distributions, with variable means and
+        standard deviations
     """
     prior = tfd.MixtureSameFamily(
         # The mixture distribution is a list of probability for the distributions. Here it is set to be
@@ -150,15 +150,16 @@ Define the average reconstruction loss
 
 def reconstruction_loss(batch_of_images, decoding_dist):
     """
-    The function takes batch_of_images (Tensor containing a batch of input images to
-    the encoder) and decoding_dist (output distribution of decoder after passing the 
-    image batch through the encoder and decoder) as arguments.
     The function should return the scalar average expected reconstruction loss.
 
+    Args:
+        batch_of_images (tensor): tensor containing a batch of input images to the encoder
+        decoding_dist (_): output distribution of decoder after passing the image batch through the encoder and decoder
     Returns:
         tf.Tensor : scalar average expected reconstruction loss
     """
     return -tf.reduce_mean(decoding_dist.log_prob(batch_of_images), axis=0)
+
 
 
 def reconstruct(encoder, decoder, batch_of_images):
@@ -243,34 +244,35 @@ def generate_images(prior, decoder, n_samples):
     return sampled_images
 
 
+
 def generate_latent_vectors(prior, n_samples):
-    ''''''
+    '''
+    This function generates n_samples latent vectors randomly, using the weights calculating during the training of the neural Network
+
+    Args:
+        prior (MixtureSameFamily): prior distribution
+        n_samples(int): number of latent vectors to be generated (1 latent vector = 1 image that can be reconstructed thanks to the decoder)
+    Return:
+        np.array:np.array of n_samples latent vectors
+    '''
     Z = prior.sample(n_samples)
     Z2 = Z.numpy()
-    '''if n_samples == 1:
-        Z3 = []
-        for element in Z2[0]:
-            Z3.append(element)
-        Z2 = np.array(Z3)'''
     return Z2
 
 
+
 def reconstruct_image_from_latent_vectors(decoder, Z):
-    ''''''
+    '''
+    This function reconstructs the images (pixels, size 64*64 (3 channels)) from the latent vectors
+
+    Args:
+        decoder (Sequential): trained decoder of the vae
+        Z (np.array): np.array of latent vectors to be decoded into images
+    Return:
+        tensorflow.python.framework.ops.EagerTensor: representation of the images decoded (size 64*64*3)
+    '''
     return decoder(Z).mean()
 
-
-def plot_recontructed_images(X):
-    ''''''
-    n_samples = len(X)
-    f, axs = plt.subplots(1, n_samples, figsize=(16, 6))
-    if n_samples == 1:
-        plt.imshow(X[0])
-    else:
-        for j in range(n_samples):
-            axs[j].imshow(X[j])
-            axs[j].axis('off')
-    plt.show()
 
 
 def plot_generate_images(prior, decoder):
@@ -295,10 +297,30 @@ def plot_generate_images(prior, decoder):
     plt.savefig('image_generation.png')
 
 
-def train(vae, train_ds, val_ds, epochs):
-    vae.fit(train_ds, validation_data=val_ds, epochs=epochs)
-    return None
+def train(epochs, out_file_encoder, out_file_decoder, dir_images = "../../Projet 4BIM/img_align_celeba/"):
+    '''This function can be used to train the neural network. Nevertheless, it requires the dataset CelebA, that is not included in our github.
+    The training has been done, in case you want more information, contact us.
+    The dataset can be loaded thanks to the load_dataset function (utils module), in which the number of images used to train the neural network can be modified (but dataset of images necessary)
 
+    Args:
+        dir_images(str): directory where the images of the CelebA dataset are
+        epochs(int): number of times we want the dataset to be read through
+        out_file_encoder(str): directory where we want the weights of the encoder to be saved
+        out_file_decoder(str): directory where we want the weights of the decoder to be saved
+    '''
+    train_ds, val_ds, test_ds = load_datasets(dir_images)
+    prior = get_prior(num_modes=2, latent_dim=50)
+    encoder = get_encoder(latent_dim=50, kl_regularizer=get_kl_regularizer(prior))
+    decoder = get_decoder(latent_dim=50)
+    vae = Model(inputs=encoder.inputs, outputs=decoder(encoder.outputs))
+    optimizer = tf.keras.optimizers.Adam(learning_rate=0.0005)
+    vae.compile(optimizer=optimizer, loss=reconstruction_loss)
+    vae.fit(train_ds, validation_data=val_ds, epochs=epochs)
+    encoder.save_weights(out_file_encoder)
+    decoder.save_weights(out_file_decoder)
+
+    
+    
 ##========================= MAIN =======================##
 
 
@@ -306,14 +328,19 @@ if __name__ == "__main__":
     print("Tensorflow Version: ", tf.__version__)
     print("Tensorflow Probability Version: ", tfp.__version__)
 
-    #train_ds, val_ds, test_ds = load_datasets()
+    #Training of the neural network
+    train(epochs = 100, out_file_encoder = 'vaetestenc', out_file_decoder = 'vaetestdec')
+
+
+    #Training doing each step individually
+    #Load the dataset
+    train_ds, val_ds, test_ds = load_datasets()
 
     # Run your function to get the prior distribution with 2 components and latent_dim = 50
     prior = get_prior(num_modes=2, latent_dim=50)
 
     # Run your function to get the encoder
-    encoder = get_encoder(
-        latent_dim=50, kl_regularizer=get_kl_regularizer(prior))
+    encoder = get_encoder(latent_dim=50, kl_regularizer=get_kl_regularizer(prior))
 
     # Run your function to get the decoder
     decoder = get_decoder(latent_dim=50)
@@ -324,20 +351,16 @@ if __name__ == "__main__":
     vae = Model(inputs=encoder.inputs, outputs=decoder(encoder.outputs))
 
     # ## Compile and fit the model
-    #
-    # It's now time to compile and train the model. Note that, it is recommand to use Hardware accelerator while training.
 
     # Compile the model
     optimizer = tf.keras.optimizers.Adam(learning_rate=0.0005)
     vae.compile(optimizer=optimizer, loss=reconstruction_loss)
 
     # Train the model
-    #vae.fit(train_ds, validation_data=val_ds, epochs=1)
+    #vae.fit(train_ds, validation_data=val_ds, epochs=100)
     # Or just load the weights
     encoder.load_weights("./model_vae/encoder/saved_encoder")
     decoder.load_weights("./model_vae/decoder/saved_decoder")
-
-    #vae.fit(train_ds, validation_data=val_ds, epochs=1)
 
     # encoder.save_weights("./model_vae/encoder/saved_encoder")
     # decoder.save_weights("./model_vae/decoder/saved_decoder")

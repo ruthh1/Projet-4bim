@@ -26,6 +26,8 @@ https://github.com/Mathieu414/4bimProject_Group2/blob/master/README.md
 That will create a virtual environment and install all the modules necessary for the program to run
 
 
+## Documentation
+
 
 ## Authors
 

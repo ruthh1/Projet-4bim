@@ -29,6 +29,8 @@ That will create a virtual environment and install all the modules necessary for
 
 ## Authors
 
+**Group 2 4BIM**
+
 Ruth BENAYOUN
 
 Noémie GOEURIOT

@@ -78,77 +78,181 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="robot_portrait.ChangeColor">
 <span class="sig-prename descclassname"><span class="pre">robot_portrait.</span></span><span class="sig-name descname"><span class="pre">ChangeColor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">button</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robot_portrait.ChangeColor" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This function changes the color of the button to blue.
+It is called the 1st time the user clicks on “Person x” button</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="robot_portrait.Images">
-<span class="sig-prename descclassname"><span class="pre">robot_portrait.</span></span><span class="sig-name descname"><span class="pre">Images</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_images</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Lframe</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robot_portrait.Images" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">robot_portrait.</span></span><span class="sig-name descname"><span class="pre">Images</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_images</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robot_portrait.Images" title="Permalink to this definition"></a></dt>
+<dd><p>This function enables the images to be displayed in the window ; list_images changes at each iteration of the algorithm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>list_images</strong> (<em>list</em>) – list of 10 PIL images, that will be displayed in the window and the user will choose between them</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="robot_portrait.add_1">
 <span class="sig-prename descclassname"><span class="pre">robot_portrait.</span></span><span class="sig-name descname"><span class="pre">add_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#robot_portrait.add_1" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This function increases the variable iteration by 1.
+It is called every time the user clicks on the &gt;&gt; NEXT button and confirms his/her choice</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="robot_portrait.ask_confirmation">
 <span class="sig-prename descclassname"><span class="pre">robot_portrait.</span></span><span class="sig-name descname"><span class="pre">ask_confirmation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robot_portrait.ask_confirmation" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This function asks confirmation of the choice of image(s) made by the user.
+It is called by clicking on the “&gt;&gt; NEXT” button.
+If the user answers “no”, the current window is reinitialized (the user can make new choices if he/she made a mistake)
+If the user answers “yes”, the function checks if the user chose a right number of images and runs the function next_step</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>z</strong> (<em>np.array</em>) – List containing 10 latent vectors representing the 10 images that have been calculated by the algorithm or that have been generated randomly thanks to the neural network (for the 1st iteration)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="robot_portrait.ask_confirmation_end">
 <span class="sig-prename descclassname"><span class="pre">robot_portrait.</span></span><span class="sig-name descname"><span class="pre">ask_confirmation_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robot_portrait.ask_confirmation_end" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This function asks confirmation of the choice of the suspect’s image when clicking on “I have found my suspect”.
+If the user answers “no”, the current window is reinitialized
+If the user answers “yes”, the function calls the end_algo function, that will finally displays the image of the suspect chosen</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>z</strong> (<em>np.array</em>) – List containing 10 latent vectors representing the 10 images that have been calculated by the algorithm or that have been generated randomly thanks to the neural network (for the 1st iteration)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="robot_portrait.contenu_window">
 <span class="sig-prename descclassname"><span class="pre">robot_portrait.</span></span><span class="sig-name descname"><span class="pre">contenu_window</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robot_portrait.contenu_window" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This function adds content to the 2nd window.
+It allows displaying the 10 images that are in the list z, the buttons to choose the images and the “next”, “quit” and “I have found my suspect” buttons, at the bottom of the window, with which the user can interact</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>z</strong> (<em>np.array</em>) – List containing 10 latent vectors representing the 10 images that have been calculated by the algorithm or that have been generated randomly thanks to the neural network (for the 1st iteration)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="robot_portrait.end_algo">
 <span class="sig-prename descclassname"><span class="pre">robot_portrait.</span></span><span class="sig-name descname"><span class="pre">end_algo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suspects</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robot_portrait.end_algo" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This function creates a window in which the image of the chosen suspect will appear.
+It also saves the suspect’s image in the suspects folder and contains a QUIT button</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z</strong> (<em>np.array</em>) – List containing 10 latent vectors representing the 10 images that have been calculated by the algorithm or that have been generated randomly thanks to the neural network (for the 1st iteration)</p></li>
+<li><p><strong>suspects</strong> (<em>list</em>) – List containing the index of the image chosen by the user</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="robot_portrait.fermer_tout">
 <span class="sig-prename descclassname"><span class="pre">robot_portrait.</span></span><span class="sig-name descname"><span class="pre">fermer_tout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#robot_portrait.fermer_tout" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="robot_portrait.generation_init">
-<span class="sig-prename descclassname"><span class="pre">robot_portrait.</span></span><span class="sig-name descname"><span class="pre">generation_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#robot_portrait.generation_init" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This function ends the program and closes all the windows. It is called when the user clicks on the button QUIT</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="robot_portrait.list_to_images">
 <span class="sig-prename descclassname"><span class="pre">robot_portrait.</span></span><span class="sig-name descname"><span class="pre">list_to_images</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robot_portrait.list_to_images" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This function converts a list of pixels of images (between 0 and 1) in a list of PIL images</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>L</strong> (<em>np.array</em>) – np.array of 10 np.array of pixels</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of PIL images obtained from the lists of pixels in L</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list_images (list)</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="robot_portrait.next_step">
 <span class="sig-prename descclassname"><span class="pre">robot_portrait.</span></span><span class="sig-name descname"><span class="pre">next_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suspects</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robot_portrait.next_step" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This function generates and calculates the next generation of images thanks to the genetic algorithm/evolution strategy.
+It is called every time the user clicks on the “&gt;&gt; NEXT” button and confirms his/her choice</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>np.array</strong><strong>)</strong> – List containing 10 latent vectors representing the 10 images that have been calculated by the algorithm or that have been generated randomly thanks to the neural network (for the 1st iteration)</p></li>
+<li><p><strong>suspects</strong> (<em>list</em>) – List containing the index of the image(s) chosen by the user</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robot_portrait.reinitialize_iteration">
+<span class="sig-prename descclassname"><span class="pre">robot_portrait.</span></span><span class="sig-name descname"><span class="pre">reinitialize_iteration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#robot_portrait.reinitialize_iteration" title="Permalink to this definition"></a></dt>
+<dd><p>This function reinitialize the number of iterations.
+It is called every time the user clicks on the START button, which enables the program to be restarted if the user wants, as the welcome_window is iconified.</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="robot_portrait.returnperson">
 <span class="sig-prename descclassname"><span class="pre">robot_portrait.</span></span><span class="sig-name descname"><span class="pre">returnperson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robot_portrait.returnperson" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This function adds the index of each image (in the z np.array) chosen by the user in the list “suspects”.
+It is called every time the user clicks on “Person x” button</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robot_portrait.run">
+<span class="sig-prename descclassname"><span class="pre">robot_portrait.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#robot_portrait.run" title="Permalink to this definition"></a></dt>
+<dd><p>This function makes run the whole program and graphical interface, by defining the encoder, decoder, necessary for decoding the image, the 1st images contained in list z generated randomly by the autoencoder.
+It also defines the number of maximum iterations and the global variable suspects where the indexes of the images chosen by the user will be stored</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="robot_portrait.set_iteration">
 <span class="sig-prename descclassname"><span class="pre">robot_portrait.</span></span><span class="sig-name descname"><span class="pre">set_iteration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#robot_portrait.set_iteration" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This function sets the global variable “iteration” at its maximum</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="robot_portrait.start_algo">
 <span class="sig-prename descclassname"><span class="pre">robot_portrait.</span></span><span class="sig-name descname"><span class="pre">start_algo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#robot_portrait.start_algo" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This function creates a 2nd window (on which the images will be displayed after) as a subwindow of the main window.
+With just this function, the window is empty but created.
+After creating the window, the function texte_window is called, which will display text in the window</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robot_portrait.texte_window">
+<span class="sig-prename descclassname"><span class="pre">robot_portrait.</span></span><span class="sig-name descname"><span class="pre">texte_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#robot_portrait.texte_window" title="Permalink to this definition"></a></dt>
+<dd><p>This function adds in the 2nd window a text. It’s a kind of tutorial/explanation of how to use the graphical interface and what it’s supposed to do.
+At the end of the function, the function contenu_window is called, to add extra content to this 2nd window</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="robot_portrait.welcome_window">
 <span class="sig-prename descclassname"><span class="pre">robot_portrait.</span></span><span class="sig-name descname"><span class="pre">welcome_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#robot_portrait.welcome_window" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This function allows display the welcome window. It creates the “root” window of the graphical interface, the first window that the user will see.
+On this window, there is a title, a little explicative text (objectives and the task the user will have to do) and a START button.
+When clicking on it, it activates the function start_algo, which creates another window in which the images will be displayed and the core of the program will start</p>
+</dd></dl>
 
 </section>
 

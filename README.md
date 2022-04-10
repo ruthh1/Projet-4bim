@@ -4,6 +4,7 @@ The goal of this project is to create a program that can generate a robot portra
 
 
 **Installation**
+
 Run this command on your terminal :
 
 if ssh : 
@@ -25,8 +26,13 @@ That will create a virtual environment and install all the modules necessary for
 
 
 **Authors**
+
 Ruth BENAYOUN
+
 Noémie GOEURIOT
+
 Yasmine KAMILI
+
 Mathieu PERRIN
+
 Seungyun SHIN

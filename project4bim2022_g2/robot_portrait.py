@@ -44,9 +44,10 @@ def texte_window():
 def contenu_window(z):
     '''This function adds content to the 2nd window.
     It allows displaying the 10 images that are in the list z, the buttons to choose the images and the "next", "quit" and "I have found my suspect" buttons, at the bottom of the window, with which the user can interact
+
     Args:
         z(np.array): List containing 10 latent vectors representing the 10 images that have been calculated by the algorithm or that have been generated randomly thanks to the neural network (for the 1st iteration)
-    Return :
+    Return:
         None'''
     nbr_columns=5
 
@@ -135,10 +136,11 @@ def fermer_tout():
 def end_algo(z, suspects):
     '''This function creates a window in which the image of the chosen suspect will appear.
     It also saves the suspect's image in the suspects folder and contains a QUIT button
+
     Args:
         z (np.array): List containing 10 latent vectors representing the 10 images that have been calculated by the algorithm or that have been generated randomly thanks to the neural network (for the 1st iteration)
         suspects(list): List containing the index of the image chosen by the user
-    Return :
+    Return:
         None'''
     window3 = tk.Toplevel(window2)
     window2.withdraw()
@@ -160,6 +162,11 @@ def end_algo(z, suspects):
     Im = list_to_images(L)
     image = Im[0]
     Im=image.resize((300,300))
+    try :
+        Im.save('./suspects/image_suspect.png')
+    except:
+        os.mkdir('suspects')
+        Im.save('./suspects/image_suspect.png')
     Im.save('./suspects/image_suspect.png')
     Im=ImageTk.PhotoImage(Im, master = window3)
     Im_widget=tk.Label(window3, image=Im)
@@ -167,7 +174,7 @@ def end_algo(z, suspects):
     Im_widget.place(x = 225, y = 270 , anchor = 'center')
     messagebox.showinfo("Save image", "The image has been save in the folder /suspects")
     window3.mainloop()
-
+    
 
     
 # On crée la fenêtre
@@ -209,13 +216,14 @@ def welcome_window():
 
     window.mainloop()
 
-
+    
     
 def ask_confirmation(z):
     '''This function asks confirmation of the choice of image(s) made by the user.
     It is called by clicking on the ">> NEXT" button.
     If the user answers "no", the current window is reinitialized (the user can make new choices if he/she made a mistake)
     If the user answers "yes", the function checks if the user chose a right number of images and runs the function next_step
+
     Args:
         z (np.array): List containing 10 latent vectors representing the 10 images that have been calculated by the algorithm or that have been generated randomly thanks to the neural network (for the 1st iteration)
     Return:
@@ -237,6 +245,7 @@ def ask_confirmation_end(z):
     '''This function asks confirmation of the choice of the suspect's image when clicking on "I have found my suspect".
     If the user answers "no", the current window is reinitialized
     If the user answers "yes", the function calls the end_algo function, that will finally displays the image of the suspect chosen
+
     Args:
         z (np.array): List containing 10 latent vectors representing the 10 images that have been calculated by the algorithm or that have been generated randomly thanks to the neural network (for the 1st iteration)
     Return:
@@ -258,17 +267,17 @@ def reinitialize_iteration():
     It is called every time the user clicks on the START button, which enables the program to be restarted if the user wants, as the welcome_window is iconified.'''
     global iteration
     iteration = 0
-
+    
  
 
 def next_step(z,suspects):
     '''This function generates and calculates the next generation of images thanks to the genetic algorithm/evolution strategy.
     It is called every time the user clicks on the ">> NEXT" button and confirms his/her choice
+
     Args:
         (np.array): List containing 10 latent vectors representing the 10 images that have been calculated by the algorithm or that have been generated randomly thanks to the neural network (for the 1st iteration)
         suspects (list): List containing the index of the image(s) chosen by the user
-    Return:
-        None'''
+    '''
     while iteration < nbre_iter_max:
         if z is not None :
             n = len(z)
@@ -278,6 +287,7 @@ def next_step(z,suspects):
             z = adjust_children(z_selected, prior)
             suspects = []
             contenu_window(z)
+            
 
 
 def add_1():
@@ -297,10 +307,10 @@ def set_iteration():
 
 def Images(list_images):
     '''This function enables the images to be displayed in the window ; list_images changes at each iteration of the algorithm
+
     Args:
         list_images (list) : list of 10 PIL images, that will be displayed in the window and the user will choose between them
-    Return:
-        None'''
+    '''
     #new size for the images
     newsize=(150,150)
     for i in range(10):
@@ -354,6 +364,7 @@ def Images(list_images):
 
 def list_to_images(L):
     '''This function converts a list of pixels of images (between 0 and 1) in a list of PIL images
+
     Args:
         L (np.array): np.array of 10 np.array of pixels
     Return:
@@ -385,7 +396,7 @@ def run():
     '''This function makes run the whole program and graphical interface, by defining the encoder, decoder, necessary for decoding the image, the 1st images contained in list z generated randomly by the autoencoder.
     It also defines the number of maximum iterations and the global variable suspects where the indexes of the images chosen by the user will be stored'''
     this_dir, _ = os.path.split(__file__)
-    
+
     global prior
     prior = get_prior(num_modes=2, latent_dim=50)
     global encoder
@@ -395,9 +406,9 @@ def run():
     decoder = get_decoder(latent_dim=50)
 
     encoder.load_weights(os.path.join(
-        this_dir, "model_vae/VAE_encoder2"))
+        this_dir, "model_vae/VAE_encoder6"))
     decoder.load_weights(os.path.join(
-        this_dir, "model_vae/VAE_decoder2"))
+        this_dir, "model_vae/VAE_decoder6"))
 
     # encoder.load_weights("./model_vae/encoder/saved_encoder")
     # decoder.load_weights("./model_vae/decoder/saved_decoder")
@@ -413,5 +424,7 @@ def run():
 
     global nbre_iter_max
     nbre_iter_max = 5
+
+    welcome_window()
 
     welcome_window()
